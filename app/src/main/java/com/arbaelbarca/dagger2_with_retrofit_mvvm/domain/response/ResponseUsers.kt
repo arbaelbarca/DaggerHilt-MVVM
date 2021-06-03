@@ -14,7 +14,7 @@ data class ResponseUsers(
     var incompleteResults: Boolean? = null,
 
     @field:SerializedName("items")
-    var items: MutableList<ItemsItem?>? = null
+    val items: List<ItemsItem>
 ) : Parcelable
 
 @Parcelize
@@ -66,7 +66,7 @@ data class ItemsItem(
     val siteAdmin: Boolean? = null,
 
     @field:SerializedName("id")
-    val id: Int? = null,
+    var id: Int? = null,
 
     @field:SerializedName("gravatar_id")
     val gravatarId: String? = null,

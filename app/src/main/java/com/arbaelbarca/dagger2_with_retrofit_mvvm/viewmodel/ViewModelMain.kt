@@ -1,8 +1,12 @@
 package com.arbaelbarca.dagger2_with_retrofit_mvvm.viewmodel
 
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
+import com.arbaelbarca.dagger2_with_retrofit_mvvm.domain.datasource.UsersPagingSource
+import com.arbaelbarca.dagger2_with_retrofit_mvvm.domain.response.ItemsItem
 import com.arbaelbarca.dagger2_with_retrofit_mvvm.domain.response.ResponseUsers
 import com.arbaelbarca.dagger2_with_retrofit_mvvm.repository.UserRepository
 import com.arbaelbarca.dagger2_with_retrofit_mvvm.utils.UiState
@@ -13,23 +17,37 @@ import javax.inject.Inject
 @HiltViewModel
 class ViewModelMain @Inject constructor(val userRepository: UserRepository) : ViewModel() {
 
-    val stateUsers = MutableLiveData<UiState<ResponseUsers>>()
+    companion object {
+        private const val DEFAULT_QUERY = "arba"
+    }
 
-//    lateinit var userRepository: UserRepository
+    private val currentQuery = MutableLiveData(DEFAULT_QUERY)
+    val stateUsers = MutableLiveData<UiState<ResponseUsers>>()
+    val stateLiveData = MutableLiveData<PagingData<ItemsItem>>()
 
     fun observerUsers() = stateUsers
+    fun observerItems() = state
+
+    val state = currentQuery.switchMap { queryString ->
+        userRepository.getSearchResults(queryString).cachedIn(viewModelScope)
+    }
+
+    fun searchUsers(query: String) {
+        currentQuery.value = query
+    }
 
     fun getListUser() {
         stateUsers.value = UiState.Loading()
         viewModelScope.launch {
             runCatching {
-                userRepository.callListUser()
+                currentQuery.switchMap { queryString ->
+                    userRepository.getSearchResults(queryString).cachedIn(viewModelScope)
+                }
             }.onSuccess {
-                stateUsers.value = UiState.Success(it)
+//                stateItems.value = UiState.Success(it)
             }.onFailure {
                 stateUsers.value = UiState.Failure(it)
             }
         }
     }
-
 }

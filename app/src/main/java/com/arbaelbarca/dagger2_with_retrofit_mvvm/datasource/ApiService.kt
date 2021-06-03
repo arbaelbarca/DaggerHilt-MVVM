@@ -8,7 +8,9 @@ interface ApiService {
 
     @GET("/search/users")
     suspend fun callSearchUser(
-        @Query("q") textSearch: String
+        @Query("q") textSearch: String,
+        @Query("page") page: Int,
+        @Query("per_page") perPage: Int
     ): ResponseUsers
 
 }
