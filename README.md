@@ -6,3 +6,4 @@ Project used tehcnology :
 - LiveData
 - DaggerHilt
 - Groupie
+- Paging3
