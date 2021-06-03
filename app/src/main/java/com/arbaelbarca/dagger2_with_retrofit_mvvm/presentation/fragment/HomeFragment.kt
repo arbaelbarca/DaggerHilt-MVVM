@@ -6,8 +6,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.*
+import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.arbaelbarca.dagger2_with_retrofit_mvvm.R
 import com.arbaelbarca.dagger2_with_retrofit_mvvm.adapter.AdapterUsersLoadState
@@ -81,6 +83,22 @@ class HomeFragment : Fragment() {
                 adapterSearchUsersPaging.submitData(viewLifecycleOwner.lifecycle, dataItem)
                 hideView(progressList)
             })
+        }
+
+        btnRetryLoad.setOnClickListener {
+            adapterSearchUsersPaging.retry()
+        }
+
+        adapterSearchUsersPaging.addLoadStateListener {
+            progressList.isVisible = it.source.refresh is LoadState.Loading
+            rvListUser.isVisible = it.source.refresh is LoadState.NotLoading
+            btnRetryLoad.isVisible = it.source.refresh is LoadState.Error
+
+            if (it.source.refresh is LoadState.NotLoading
+                && it.append.endOfPaginationReached && adapterSearchUsersPaging.itemCount < 1
+            ) {
+                Toast.makeText(requireContext(), "Terjadi error", Toast.LENGTH_SHORT).show()
+            } else btnRetryLoad.isVisible = true
         }
 
 //        viewmodelMain.getListUser()
