@@ -10,8 +10,8 @@ import com.arbaelbarca.dagger2_with_retrofit_mvvm.domain.response.ItemsItem
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 
-class AdapterSearchUsersPaging :
-    PagingDataAdapter<ItemsItem, AdapterSearchUsersPaging.ViewHolder>(UserComparator) {
+class AdapterUsersPaging :
+    PagingDataAdapter<ItemsItem, AdapterUsersPaging.ViewHolder>(UserComparator) {
     class ViewHolder(val itemUserBinding: LayoutItemUsersBinding) :
         RecyclerView.ViewHolder(itemUserBinding.root) {
         fun bind(itemsItem: ItemsItem) {

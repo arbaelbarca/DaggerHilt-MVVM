@@ -1,4 +1,4 @@
-package com.arbaelbarca.dagger2_with_retrofit_mvvm.presentation
+package com.arbaelbarca.dagger2_with_retrofit_mvvm.presentation.fragment
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -6,12 +6,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.activity.viewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.*
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.arbaelbarca.dagger2_with_retrofit_mvvm.R
-import com.arbaelbarca.dagger2_with_retrofit_mvvm.adapter.AdapterSearchUsersPaging
+import com.arbaelbarca.dagger2_with_retrofit_mvvm.adapter.AdapterUsersLoadState
+import com.arbaelbarca.dagger2_with_retrofit_mvvm.adapter.AdapterUsersPaging
 import com.arbaelbarca.dagger2_with_retrofit_mvvm.domain.response.ItemsItem
 import com.arbaelbarca.dagger2_with_retrofit_mvvm.utils.UiState
 import com.arbaelbarca.dagger2_with_retrofit_mvvm.utils.hideView
@@ -40,7 +40,7 @@ class HomeFragment : Fragment() {
 
     val viewmodelMain: ViewModelMain by viewModels()
 
-    val adapterSearchUsersPaging = AdapterSearchUsersPaging()
+    val adapterSearchUsersPaging = AdapterUsersPaging()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -67,7 +67,9 @@ class HomeFragment : Fragment() {
     private fun initial() {
 
         rvListUser.apply {
-            adapter = adapterSearchUsersPaging
+            adapter = adapterSearchUsersPaging.withLoadStateFooter(
+                footer = AdapterUsersLoadState { adapterSearchUsersPaging.retry() }
+            )
             layoutManager = LinearLayoutManager(requireContext())
             hasFixedSize()
         }
@@ -123,11 +125,12 @@ class HomeFragment : Fragment() {
 
         @JvmStatic
         fun newInstance(param1: String, param2: String) =
-            HomeFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
+            HomeFragment()
+                .apply {
+                    arguments = Bundle().apply {
+                        putString(ARG_PARAM1, param1)
+                        putString(ARG_PARAM2, param2)
+                    }
                 }
-            }
     }
 }
