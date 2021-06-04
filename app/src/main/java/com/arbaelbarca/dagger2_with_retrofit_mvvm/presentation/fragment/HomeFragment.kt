@@ -100,44 +100,8 @@ class HomeFragment : Fragment() {
                 Toast.makeText(requireContext(), "Terjadi error", Toast.LENGTH_SHORT).show()
             } else btnRetryLoad.isVisible = true
         }
-
-//        viewmodelMain.getListUser()
-//        observerData()
     }
 
-    private fun observerData() {
-        viewmodelMain.observerUsers().observe(viewLifecycleOwner, Observer {
-            when (it) {
-                is UiState.Loading -> {
-                    showView(progressList)
-                }
-                is UiState.Success -> {
-                    hideView(progressList)
-                    val dataItem = it.data
-//                    adapterSearchUsersPaging.submitData(viewLifecycleOwner.lifecycle, dataItem)
-                }
-                is UiState.Failure -> {
-                    hideView(progressList)
-                    Toast.makeText(
-                        requireContext(),
-                        "Error ${it.throwable.message}",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
-            }
-        })
-    }
-
-    private fun initAdapter(dataItem: MutableList<ItemsItem?>) {
-//        val groupieAdapter = GroupAdapter<GroupieViewHolder>().apply {
-//            dataItem.forEach {
-//                it?.let { it1 -> AdapterUsers(it1, this@MainActivity) }?.let { it2 -> add(it2) }
-//            }
-//        }
-//        setRvAdapterVertikal(rvListUser, groupieAdapter)
-
-
-    }
 
     companion object {
 
