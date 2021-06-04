@@ -97,8 +97,9 @@ class HomeFragment : Fragment() {
             if (it.source.refresh is LoadState.NotLoading
                 && it.append.endOfPaginationReached && adapterSearchUsersPaging.itemCount < 1
             ) {
+                btnRetryLoad.isVisible = true
                 Toast.makeText(requireContext(), "Terjadi error", Toast.LENGTH_SHORT).show()
-            } else btnRetryLoad.isVisible = true
+            } else btnRetryLoad.isVisible = false
         }
     }
 
