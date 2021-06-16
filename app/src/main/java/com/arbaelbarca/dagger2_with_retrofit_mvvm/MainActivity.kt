@@ -5,9 +5,10 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import com.arbaelbarca.dagger2_with_retrofit_mvvm.adapter.AdapterUsers
+import com.arbaelbarca.dagger2_with_retrofit_mvvm.datasource.local.db.room.entity.EntityUser
 import com.arbaelbarca.dagger2_with_retrofit_mvvm.domain.response.ItemsItem
+import com.arbaelbarca.dagger2_with_retrofit_mvvm.presentation.listener.OnClickItem
 import com.arbaelbarca.dagger2_with_retrofit_mvvm.utils.UiState
 import com.arbaelbarca.dagger2_with_retrofit_mvvm.utils.hideView
 import com.arbaelbarca.dagger2_with_retrofit_mvvm.utils.setRvAdapterVertikal
@@ -23,6 +24,18 @@ class MainActivity : AppCompatActivity() {
 
     val viewmodelMain: ViewModelMain by viewModels()
 
+    val onClickItem = object : OnClickItem {
+        override fun ClickItem(pos: Int, any: Any) {
+            val dataItemUser = any as ItemsItem
+            val entityUser = EntityUser(
+                dataItemUser.id!!,
+                dataItemUser.login.toString(),
+                dataItemUser.avatarUrl.toString()
+            )
+            viewmodelMain.addFavUser(entityUser)
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -33,6 +46,44 @@ class MainActivity : AppCompatActivity() {
     private fun initial() {
         viewmodelMain.getListUser()
         observerData()
+        observeAddFav()
+        observeDeleteFav()
+    }
+
+    private fun observeDeleteFav() {
+        viewmodelMain.observeAddFav()
+            .observe(this, Observer {
+                when (it) {
+                    is UiState.Loading -> {
+                    }
+                    is UiState.Success -> {
+                        val dataItem = it.data
+                        Toast.makeText(this, dataItem, Toast.LENGTH_SHORT).show()
+                    }
+                    is UiState.Failure -> {
+                        Toast.makeText(this, "Error ${it.throwable.message}", Toast.LENGTH_SHORT)
+                            .show()
+                    }
+                }
+            })
+    }
+
+    private fun observeAddFav() {
+        viewmodelMain.observeAddFav()
+            .observe(this, Observer {
+                when (it) {
+                    is UiState.Loading -> {
+                    }
+                    is UiState.Success -> {
+                        val dataItem = it.data
+                        Toast.makeText(this, dataItem, Toast.LENGTH_SHORT).show()
+                    }
+                    is UiState.Failure -> {
+                        Toast.makeText(this, "Error ${it.throwable.message}", Toast.LENGTH_SHORT)
+                            .show()
+                    }
+                }
+            })
     }
 
     private fun observerData() {
@@ -58,10 +109,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initAdapter(dataItem: MutableList<ItemsItem?>) {
-
         val groupieAdapter = GroupAdapter<GroupieViewHolder>().apply {
             dataItem.forEach {
-                it?.let { it1 -> AdapterUsers(it1, this@MainActivity) }?.let { it2 -> add(it2) }
+                it?.let { it1 -> AdapterUsers(it1, onClickItem) }?.let { it2 -> add(it2) }
             }
         }
 

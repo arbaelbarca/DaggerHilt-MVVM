@@ -1,4 +1,4 @@
-package com.arbaelbarca.dagger2_with_retrofit_mvvm.datasource
+package com.arbaelbarca.dagger2_with_retrofit_mvvm.datasource.network
 
 import com.arbaelbarca.dagger2_with_retrofit_mvvm.domain.response.ResponseUsers
 import retrofit2.http.GET

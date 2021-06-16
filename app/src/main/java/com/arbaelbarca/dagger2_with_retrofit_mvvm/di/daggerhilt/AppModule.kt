@@ -1,6 +1,6 @@
 package com.arbaelbarca.dagger2_with_retrofit_mvvm.di.daggerhilt
 
-import com.arbaelbarca.dagger2_with_retrofit_mvvm.datasource.ApiService
+import com.arbaelbarca.dagger2_with_retrofit_mvvm.datasource.network.ApiService
 import com.arbaelbarca.dagger2_with_retrofit_mvvm.utils.Constants
 import dagger.Module
 import dagger.Provides
