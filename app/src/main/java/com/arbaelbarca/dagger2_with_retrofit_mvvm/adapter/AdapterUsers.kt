@@ -14,14 +14,14 @@ class AdapterUsers(val itemsItem: ItemsItem, val onClickItem: OnClickItem) : Ite
             itemView.apply {
                 imgUser.loadImageUrl(itemsItem.avatarUrl.toString(), context)
                 tvNameUser.text = itemsItem.login
-
-                imgFavUser.setOnClickListener {
-                    onClickItem.ClickItem(position, itemsItem)
-                }
             }
 
+            itemView.setOnClickListener {
+                onClickItem.ClickItem(position, itemsItem)
+            }
         }
     }
+
 
     override fun getLayout(): Int = R.layout.layout_item_users
 }

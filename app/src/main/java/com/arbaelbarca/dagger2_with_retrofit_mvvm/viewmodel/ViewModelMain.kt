@@ -20,11 +20,13 @@ class ViewModelMain @Inject constructor(
     val stateAddFav = MutableLiveData<UiState<String>>()
     val stateDeleteFav = MutableLiveData<UiState<String>>()
     val stateCheckFav = MutableLiveData<UiState<List<EntityUser>>>()
+    val stateIsCheckFav = MutableLiveData<UiState<List<EntityUser>>>()
 
     fun observerUsers() = stateUsers
     fun observeAddFav() = stateAddFav
     fun observeDeleteFav() = stateDeleteFav
     fun observeCheckFav() = stateCheckFav
+    fun observeIsCheckFav() = stateIsCheckFav
 
     fun checkFavUser(username: String) {
         viewModelScope.launch {
@@ -34,6 +36,18 @@ class ViewModelMain @Inject constructor(
                 stateCheckFav.value = UiState.Success(it)
             }.onFailure {
                 stateCheckFav.value = UiState.Failure(it)
+            }
+        }
+    }
+
+    fun ischeckFavUser(username: String) {
+        viewModelScope.launch {
+            runCatching {
+                userRepository.checkFav(username)
+            }.onSuccess {
+                stateIsCheckFav.value = UiState.Success(it)
+            }.onFailure {
+                stateIsCheckFav.value = UiState.Failure(it)
             }
         }
     }
